@@ -25,6 +25,10 @@ def _database_url():
     if url.startswith("postgresql://") and "+psycopg" not in url:
         url = url.replace("postgresql://", "postgresql+psycopg://", 1)
 
+    # Render external Postgres hostnames (*.render.com) require SSL
+    if ".render.com" in url and "sslmode=" not in url:
+        url += "&sslmode=require" if "?" in url else "?sslmode=require"
+
     return url
 
 
