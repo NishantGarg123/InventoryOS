@@ -16,4 +16,4 @@ COPY . .
 
 EXPOSE 5000
 
-CMD ["sh", "-c", "python -m app.db_init && exec gunicorn --preload --bind 0.0.0.0:${PORT:-5000} --workers 2 --timeout 120 --access-logfile - --error-logfile - run:app"]
+CMD ["sh", "-c", "if [ -d backend/app ]; then cd backend; fi; python -m app.db_init && exec gunicorn --preload --bind 0.0.0.0:${PORT:-5000} --workers 2 --timeout 120 --access-logfile - --error-logfile - run:app"]
