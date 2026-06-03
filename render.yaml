@@ -1,0 +1,22 @@
+# Optional: deploy backend + Postgres together on Render via Blueprint
+# Dashboard → New → Blueprint → connect this repo
+
+databases:
+  - name: inventory-db
+    databaseName: inventory_db
+    user: inventory
+    plan: free
+
+services:
+  - type: web
+    name: inventory-backend
+    runtime: docker
+    rootDir: backend
+    plan: free
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: inventory-db
+          property: connectionString
+      - key: FLASK_ENV
+        value: production
