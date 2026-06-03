@@ -1,37 +1,35 @@
-# Render backend deploy checklist
+# Render backend deploy
 
-## Render dashboard settings
+## Critical: Root Directory
 
-| Setting | Value |
-|---------|--------|
-| Root Directory | `backend` |
-| Runtime | **Docker** |
-| Branch | `main` |
+In Render → your Web Service → **Settings**:
 
-## Required environment variable
+| Setting | Must be |
+|---------|---------|
+| **Root Directory** | `backend` |
+
+If Root Directory is empty (repo root), Docker copies the whole repo and paths like `app/db_init.py` will **not** exist at `/app/app/...` — deploy will fail.
+
+## Environment
 
 | Key | Value |
 |-----|--------|
 | `DATABASE_URL` | **Internal Database URL** from Render PostgreSQL |
 
-Do **not** set `USE_SQLITE` on Render.
-
-## Files that **must** be in GitHub (`backend/`)
+## Project layout (this repo)
 
 ```
 backend/
 ├── Dockerfile
 ├── requirements.txt
 ├── run.py
-├── init_db.py          (optional; db_init is in app/)
 └── app/
     ├── __init__.py
-    ├── config.py
+    ├── db_init.py
     ├── models.py
+    ├── config.py
     ├── validators.py
-    ├── db_init.py      ← REQUIRED (Docker runs python -m app.db_init)
     └── routes/
-        ├── __init__.py
         ├── products.py
         ├── customers.py
         ├── orders.py
@@ -42,16 +40,12 @@ backend/
 
 ```powershell
 cd D:\Assignment
-git add backend/
-git status
-git commit -m "Fix Render deploy: db init in app package"
+git add backend/ render.yaml
+git commit -m "Fix Dockerfile for Render"
 git push origin main
 ```
 
-Then in Render: **Manual Deploy** → Deploy latest commit.
-
 ## Verify
 
-1. Build log ends with: `All required backend files present.`
-2. Runtime log: `Database connection OK — tables ready.`
-3. Browser: `https://YOUR-SERVICE.onrender.com/health` → `{"status":"ok"}`
+- Logs: `Database connection OK — tables ready.`
+- URL: `https://YOUR-SERVICE.onrender.com/health`

@@ -1,6 +1,4 @@
-# Optional: deploy backend + Postgres together on Render via Blueprint
-# Dashboard → New → Blueprint → connect this repo
-
+# Render Blueprint — sets correct root so Docker COPY paths match
 databases:
   - name: inventory-db
     databaseName: inventory_db
@@ -12,6 +10,7 @@ services:
     name: inventory-backend
     runtime: docker
     rootDir: backend
+    dockerfilePath: ./Dockerfile
     plan: free
     envVars:
       - key: DATABASE_URL
