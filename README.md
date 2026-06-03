@@ -1,3 +1,4 @@
+
 # Inventory & Order Management System
 
 Full-stack application for managing products, customers, orders, and inventory. Built per the technical assessment requirements.
